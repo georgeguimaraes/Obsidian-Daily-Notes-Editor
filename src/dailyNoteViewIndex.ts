@@ -116,15 +116,12 @@ export default class DailyNoteViewPlugin extends Plugin {
     async openDailyNoteEditor() {
         const workspace = this.app.workspace;
 
-        // Check if a Daily Notes Editor view is already open
         const existingLeaves = workspace.getLeavesOfType(DAILY_NOTE_VIEW_TYPE);
         if (existingLeaves.length > 0) {
-            // Reuse the existing leaf
             workspace.revealLeaf(existingLeaves[0]);
             return;
         }
 
-        // Create a new leaf if none exists
         const leaf = workspace.getLeaf(true);
         await leaf.setViewState({ type: DAILY_NOTE_VIEW_TYPE });
         workspace.revealLeaf(leaf);
