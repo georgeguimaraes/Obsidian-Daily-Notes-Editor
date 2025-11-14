@@ -280,14 +280,14 @@
     {/if}
     {#each renderedFiles as file (file.path)}
         <div class="daily-note-wrapper" use:inview={{
-            rootMargin: "80%",
+            rootMargin: "300%",
             unobserveOnEnter: false,
             root: leaf.view.contentEl
         }} on:inview_change={({ detail }) => handleNoteVisibilityChange(file, detail.inView)}>
-            <DailyNote 
-                file={file} 
-                plugin={plugin} 
-                leaf={leaf} 
+            <DailyNote
+                file={file}
+                plugin={plugin}
+                leaf={leaf}
                 shouldRender={visibleNotes.has(file.path)}
             />
         </div>
