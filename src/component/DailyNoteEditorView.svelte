@@ -18,7 +18,7 @@
     export let target: string = "";
     export let timeField: TimeField = "mtime"; // 默认使用修改时间
     
-    const size = 1;
+    const size = 3;
     let intervalId;
 
     let renderedFiles: TFile[] = [];
@@ -118,7 +118,7 @@
 
     function startFillViewport() {
         if (!intervalId) {
-            intervalId = setInterval(infiniteHandler, 1);
+            intervalId = setInterval(infiniteHandler, 20);
         }
     }
 
@@ -130,6 +130,13 @@
     function infiniteHandler() {
         if (leaf.height === 0) return;
         if (!fileManager || !hasMore) return;
+
+        // Pause loading if an editor has focus (prevents scroll jumping on mobile)
+        const focusedElement = document.activeElement;
+        if (focusedElement && focusedElement.closest('.cm-editor')) {
+            return;
+        }
+
         if (filteredFiles.length === 0) {
             hasMore = false;
         } else {
@@ -257,6 +264,11 @@
         if (isVisible) {
             visibleNotes.add(file.path);
         } else {
+            // Don't unload if an editor is focused (prevents issues on mobile with keyboard)
+            const focusedElement = document.activeElement;
+            if (focusedElement && focusedElement.closest('.cm-editor')) {
+                return;
+            }
             visibleNotes.delete(file.path);
         }
         visibleNotes = visibleNotes;
@@ -280,7 +292,7 @@
     {/if}
     {#each renderedFiles as file (file.path)}
         <div class="daily-note-wrapper" use:inview={{
-            rootMargin: "300%",
+            rootMargin: "150%",
             unobserveOnEnter: false,
             root: leaf.view.contentEl
         }} on:inview_change={({ detail }) => handleNoteVisibilityChange(file, detail.inView)}>
